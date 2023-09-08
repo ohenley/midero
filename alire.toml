@@ -1,0 +1,37 @@
+name = "midero"
+description = "Robotic with Ada"
+tags = ["ada", "stm32", "robotic", "embedded"]
+version = "0.1.0"
+
+authors = ["bullydd"]
+maintainers = ["bullydd <clubdeveloppeursenegal@gmail.com>"]
+maintainers-logins = ["bullydd"]
+
+executables = ["midero"]
+licenses = "BSD-3-Clause"
+
+[configuration]
+auto_gpr_with = true
+disabled = false
+generate_ada = true
+generate_c = true
+generate_gpr = true
+output_dir = "config"
+
+[configuration.values.arm_cortex]
+core = "m4f"
+[configuration.values.stm32_config]
+board = "stm32f429disco"
+mcu = "stm32f429x"
+runtime = "embedded"
+[[depends-on]]
+arm_cortex="1.0.0"
+beta_types = "1.0.0"
+gnat_arm_elf = "^12"
+hal_embedded = "1.0.0"
+stm32_boards = "1.0.0"
+stm32_components = "1.0.0"
+stm32_drivers = "1.0.0"
+stm32_graphics = "1.0.0"
+stm32_svd = "1.0.0"
+
