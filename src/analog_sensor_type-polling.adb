@@ -54,7 +54,6 @@ package body Analog_Sensor_Type.Polling is
       Direct_Reading : Natural;
       ADC_Successful : Boolean;
    begin
-
       --  Wait for sensor's sampling time
       --  delay until Clock + Milliseconds (100);
 
@@ -67,7 +66,7 @@ package body Analog_Sensor_Type.Polling is
          IO_Successful := False;
       end if;
 
-      --  Because of polymorphism of This, we check the kind of sensor
+      --  Because of polymorphism of This, we check the kind of sensor used
       --  before computing This.Distance
       case This.Kind is
          when GP2Y0A41SK0F =>
@@ -109,67 +108,8 @@ package body Analog_Sensor_Type.Polling is
             end if;
       end case;
 
-      --  Reading := This.Distance;
       IO_Successful := True;
 
    end Get_Distance;
-
-   --  function Get_Distance
-   --    (This : in out SharpIR) return Centimeters
-   --  is
-   --     Direct_Reading : Natural;
-   --     ADC_Successful : Boolean;
-   --  begin
-   --
-   --     This.Get_Raw_Reading (Direct_Reading, ADC_Successful);
-   --     --  Call ADC to get readings from Sharp IR sensor
-   --
-   --     if not ADC_Successful then
-   --        Panic;
-   --        This.Distance := 0;
-   --     end if;
-   --
-   --     --  Because of polymorphism of sensor, we check the kind of sensor
-   --     --  before compute This.Distance
-   --     case This.Kind is
-   --        when GP2Y0A41SK0F =>
-   --           This.Distance :=
-   --             Centimeters (Natural (This.GP2Y0A41_Num) /
-   --                          (Direct_Reading - This.GP2Y0A41_Offset));
-   --        when GP2Y0A21YK0F =>
-   --           This.Distance :=
-   --             Centimeters (Natural (This.GP2Y0A21_Num) /
-   --                          (Direct_Reading - This.GP2Y0A21_Offset));
-   --        when GP2Y0A02YK0F =>
-   --           This.Distance :=
-   --             Centimeters (Natural (This.GP2Y0A02_Num) /
-   --                          (Direct_Reading - This.GP2Y0A02_Offset));
-   --     end case;
-   --
-   --     --  Once This.Distance is computed then we bound it.
-   --     case This.Kind is
-   --        when GP2Y0A41SK0F =>
-   --           if This.Distance >= 30 then
-   --              This.Distance := 31;
-   --           elsif This.Distance <= 4 then
-   --              This.Distance := 3;
-   --           end if;
-   --
-   --        when GP2Y0A21YK0F =>
-   --           if This.Distance >= 80 then
-   --              This.Distance := 81;
-   --           elsif This.Distance <= 10 then
-   --              This.Distance := 9;
-   --           end if;
-   --
-   --        when GP2Y0A02YK0F =>
-   --           if This.Distance >= 150 then
-   --              This.Distance := 151;
-   --           elsif This.Distance <= 20 then
-   --              This.Distance := 19;
-   --           end if;
-   --     end case;
-   --     return This.Distance;
-   --  end Get_Distance;
 
 end Analog_Sensor_Type.Polling;

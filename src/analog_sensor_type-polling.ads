@@ -27,9 +27,6 @@ package Analog_Sensor_Type.Polling is
       Reading       : out Centimeters;
       IO_Successful : out Boolean);
 
-   --  function Get_Distance
-   --  (This : in out SharpIR) return Centimeters;
-
 private
 
    type SharpIRNumerator is range 2076 .. 9462;
