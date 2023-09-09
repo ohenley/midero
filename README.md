@@ -51,7 +51,7 @@ Inside midero repo, issue this command to install all dependencies, build gpr fi
     ./make.sh
 
 
-## Build with gnatstudio
+## Build and upload your program in your board
 On your terminal, run:
 
     ./run.sh
