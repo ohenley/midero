@@ -4,17 +4,17 @@ with LCD_Std_Out;                    use LCD_Std_Out;
 with STM32.ADC;                   
 with STM32.Device;
 
-with Analog_Sensor_Calibration_LCD;
 with Global_Initialization;
 with Midero.Hardware_Configuration;
+with System_Configuration;
 
 with Panic;
 
 package body Vehicle is
    Period : constant Time_Span := Milliseconds 
      (System_Configuration.Engine_Monitor_Period);
-   
-   Current_Distance : Centimeters := 0;
+     
+ 	Sonar : SharpIR (Kind => GP2Y0A21YK0F);
    
    procedure Initialize_Motors (M1, M2, M3, M4 : in out Motor);
    --  Initializes the fours motors. This must be done before any software
@@ -29,29 +29,67 @@ package body Vehicle is
    procedure Set_Up_ADC_General_Settings;
    --  Does ADC general setup for al ADC units.
    
-   --------------
-   -- Distance --
-   --------------
-   function Distance return Centimeters is
-   begin
-      return Current_Distance;
-   end Distance;
    
-   ---------------------
-   -- Engine_Monitor ---
-   ---------------------
+    -----------------------
+   -- Critical_Distance --
+   -----------------------
+   
+   protected Critical_Distance is
+      procedure Set_Distance (Reading : Integer);
+      procedure Get_Distance (Reading : out Integer);
+   private
+      Distance : Integer := 0;
+   end Critical_Distance;
+   
+   protected body Critical_Distance is
+      ------------------
+      -- Set_Distance --
+      ------------------
+      
+      procedure Set_Distance (Reading : Integer) is
+      begin
+         Distance := Reading;
+      end Set_Distance;
+      
+      ------------------
+      -- Get_Distance --
+      ------------------
+      
+      procedure Get_Distance (Reading : out Integer) is
+      begin 
+         Reading := Distance;
+      end Get_Distance;
+   end Critical_Distance;
+   
+   
+   --------------------
+   -- Engine_Monitor --
+   --------------------
+   
+   task Engine_Monitor
+     with
+       Priority => System_Configuration.Engine_Monitor_Priority;
+   
    task body Engine_Monitor is
-      Next_Release  : Time;
+      Next_Release : Time;
+      Reading : Centimeters;
       IO_Successful : Boolean;
    begin
       Global_Initialization.Critical_Instant.Wait (Epoch => Next_Release);
-      Clear_Screen;
-      loop
-         Vehicle.Test_Engage;
-         Next_Release := Next_Release + Period;
+      Next_Release := Clock + Period;
+      
+      loop      
          delay until Next_Release;
+         Next_Release := Next_Release + Period;
+         
+         Sonar.Get_Distance (Reading       => Reading,
+                             IO_Successful => IO_Successful);
+         if IO_Successful then
+            Critical_Distance.Set_Distance (Reading => Integer (Reading));
+         end if;
       end loop;
    end Engine_Monitor;
+   
    -----------------
    -- Test_Engage --
    -----------------
@@ -169,12 +207,6 @@ package body Vehicle is
                         Input_Channel => Selected_Input_Channel,
                         Input_Pin     => Input_Pin);
       Sensor.Initialize;
-      --  Calibrate_Analog_Sensor (Sensor            => Sensor,
-      --                           Sampling_Interval => Seconds (2),
-      --                           Successful        => Successful);
-      --  if not Successful then
-      --     Panic;
-      --  end if;
    end Initialize_Sonar;
    
    ----------------
@@ -186,5 +218,15 @@ package body Vehicle is
                          M3 => Motor_Top_Left,     M4 => Motor_Top_Right);
       Initialize_Sonar (Sonar);
    end Initialize;
+   
+   ---------------------------
+   -- Get_Measured_Distance --
+   ---------------------------
+   function Get_Measured_Distance return Integer is
+      Distance : Integer;
+   begin
+      Critical_Distance.Get_Distance (Reading => Distance);
+      return Distance;
+   end Get_Measured_Distance;
    
 end Vehicle;
