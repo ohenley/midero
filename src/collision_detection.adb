@@ -1,14 +1,9 @@
 pragma Ada_2012;
 with LCD_Std_Out;            use LCD_Std_Out;
 with Analog_Sensor_Type;     use Analog_Sensor_Type;
+with Vehicle;
 
 package body Collision_Detection is
-
-   function Moving_Forward
-     (Current_Direction : Remote_Control.Travel_Directions;
-      Current_Power     : Remote_Control.Percentage)
-      return Boolean
-     with Inline;
 
    function Exclusion_Zone_Violated
      (Sonar_Reading : Centimeters) return Boolean
@@ -19,38 +14,14 @@ package body Collision_Detection is
    -----------
 
    procedure Check
-     (Current_Direction  : Remote_Control.Travel_Directions;
-      Current_Power      : Remote_Control.Percentage;
-      Collision_Imminent : out Boolean)
+     (Collision_Imminent : out Boolean)
    is
       Reading       : Centimeters;
-      IO_Successful : Boolean := True;
    begin
       Collision_Imminent := False;  --  Default
-      if Moving_Forward (Current_Direction, Current_Power) then
-         Vehicle.Sonar.Get_Distance (Reading       => Reading,
-                                   IO_Successful => IO_Successful);
-         if not IO_Successful then
-            return;
-         else
-            Collision_Imminent := Exclusion_Zone_Violated (Reading);
-         end if;
-      end if;
+      Reading := Centimeters (Vehicle.Get_Measured_Distance);
+      Collision_Imminent := Exclusion_Zone_Violated (Reading);
    end Check;
-
-   --------------------
-   -- Moving_Forward --
-   --------------------
-
-   function Moving_Forward
-     (Current_Direction : Remote_Control.Travel_Directions;
-      Current_Power     : Remote_Control.Percentage)
-      return Boolean
-   is
-      use Remote_Control;
-   begin
-      return Current_Direction = Forward and Current_Power > 0;
-   end Moving_Forward;
 
    -----------------------------
    -- Exclusion_Zone_Violated --
@@ -72,3 +43,4 @@ package body Collision_Detection is
    end Exclusion_Zone_Violated;
 
 end Collision_Detection;
+
