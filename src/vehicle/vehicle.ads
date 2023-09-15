@@ -9,7 +9,6 @@
 -------------------------------------------------------------------------------
 
 with Engine;
-with Remote_Control;
 with Analog_Sensor_Type;                  use Analog_Sensor_Type;
 with Analog_Sensor_Type.Polling;          use Analog_Sensor_Type.Polling;
 
@@ -27,15 +26,12 @@ package Vehicle is
    --  The offset of the sharp IR sensor from the front of the vehicle as
    --  physically built.
    
-   Power : Remote_Control.Percentage := 50;
    -----------------------
    -- Vehicle utilities --
    -----------------------
    procedure Initialize;
    procedure Test_Engage;
    procedure Test_Stop;
-   
-   procedure Initialize;
-   function Get_Measured_Distance return Integer;
+   function  Get_Measured_Distance return Integer;
    
 end Vehicle;

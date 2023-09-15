@@ -5,12 +5,12 @@ with Vehicle;                       pragma Unreferenced (Vehicle);
 with Global_Initialization;
 with System_Configuration;
 
+-- with LCD_Std_Out;     use LCD_Std_Out;
+
 procedure Midero_bot is
    pragma Priority (System_Configuration.Main_Priority);
 begin
    Vehicle.Initialize;   
-   --  Allow the tasks to start doing their post-initialization work,  ie the
-   --  epoch starts for their periodic loops with the value passed
    Global_Initialization.Critical_Instant.Signal (Epoch => Clock);
    loop
       delay until Time_Last;
