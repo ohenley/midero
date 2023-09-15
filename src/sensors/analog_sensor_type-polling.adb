@@ -54,8 +54,6 @@ package body Analog_Sensor_Type.Polling is
       Direct_Reading : Natural;
       ADC_Successful : Boolean;
    begin
-      --  Wait for sensor's sampling time
-      --  delay until Clock + Milliseconds (100);
 
       This.Get_Raw_Reading (Direct_Reading, ADC_Successful);
       --  Call ADC to get readings from Sharp IR sensor
@@ -66,7 +64,7 @@ package body Analog_Sensor_Type.Polling is
          IO_Successful := False;
       end if;
 
-      --  Because of polymorphism of This, we check the kind of sensor used
+      --  Because of polymorphism of This, we check the kind of sensor
       --  before computing This.Distance
       case This.Kind is
          when GP2Y0A41SK0F =>
@@ -108,8 +106,8 @@ package body Analog_Sensor_Type.Polling is
             end if;
       end case;
 
+      --  Reading := This.Distance;
       IO_Successful := True;
-
    end Get_Distance;
 
 end Analog_Sensor_Type.Polling;

@@ -14,14 +14,25 @@ project Midero is
    end case;
    
    
-   for Source_Dirs use ("src/", "config/");
+   for Source_Dirs use 
+     ("src/", 
+      "config/",
+      "src/engine",
+      "src/vehicle",
+      "src/utils",
+      "src/control_systems",
+      "src/components",
+      "src/config_systems",
+      "src/sensors");
+      
    for Object_Dir use "obj/" & Midero_Config.Build_Profile;
    for Create_Missing_Dirs use "True";
    for Exec_Dir use "bin";
    for Main use ("midero_bot.adb");
 
    package Compiler is
-      for Default_Switches ("Ada") use Midero_Config.Ada_Compiler_Switches;
+      for Default_Switches ("Ada") use Midero_Config.Ada_Compiler_Switches &
+      ("-gnat2022");
    end Compiler;
 
    package Binder is

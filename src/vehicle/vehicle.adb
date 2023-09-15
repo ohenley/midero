@@ -4,6 +4,7 @@ with LCD_Std_Out;                    use LCD_Std_Out;
 with STM32.ADC;                   
 with STM32.Device;
 
+with Analog_Sensor_Calibration_LCD;
 with Global_Initialization;
 with Midero.Hardware_Configuration;
 with System_Configuration;
@@ -13,24 +14,19 @@ with Panic;
 package body Vehicle is
    Period : constant Time_Span := Milliseconds 
      (System_Configuration.Engine_Monitor_Period);
-     
- 	Sonar : SharpIR (Kind => GP2Y0A21YK0F);
+   
+   Sonar : SharpIR (Kind => GP2Y0A21YK0F);
    
    procedure Initialize_Motors (M1, M2, M3, M4 : in out Motor);
    --  Initializes the fours motors. This must be done before any software
    --  commands or accesses to those motors.
    
-   procedure Initialize_Sonar (Sensor : in out SharpIR)
-     with
-       Post => Enabled (Sensor);
-   --  Initializes the Sonar on the vehicle. This must be done before any 
-   --  software commands or accesses to the sensor.
+   procedure Initialize_Sonar (Sensor : in out SharpIR);
    
    procedure Set_Up_ADC_General_Settings;
    --  Does ADC general setup for al ADC units.
    
-   
-    -----------------------
+   -----------------------
    -- Critical_Distance --
    -----------------------
    
@@ -42,6 +38,7 @@ package body Vehicle is
    end Critical_Distance;
    
    protected body Critical_Distance is
+      
       ------------------
       -- Set_Distance --
       ------------------
@@ -61,11 +58,10 @@ package body Vehicle is
       end Get_Distance;
    end Critical_Distance;
    
-   
    --------------------
    -- Engine_Monitor --
    --------------------
-   
+ 
    task Engine_Monitor
      with
        Priority => System_Configuration.Engine_Monitor_Priority;
@@ -214,8 +210,8 @@ package body Vehicle is
    ----------------
    procedure Initialize is
    begin
-      Initialize_Motors (M1 => Motor_Bottom_Right, M2 => Motor_Bottom_Left,
-                         M3 => Motor_Top_Left,     M4 => Motor_Top_Right);
+      --Initialize_Motors (M1 => Motor_Bottom_Right, M2 => Motor_Bottom_Left,
+       --                  M3 => Motor_Top_Left,     M4 => Motor_Top_Right);
       Initialize_Sonar (Sonar);
    end Initialize;
    

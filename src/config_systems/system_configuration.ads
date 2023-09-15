@@ -8,8 +8,8 @@ package System_Configuration is
    --  here for ease of setting with the big picture in view.
 
    Main_Priority           : constant Priority := Priority'First; -- lowest
-   Engine_Monitor_Priority : constant Priority  := Main_Priority + 1;
-   Remote_Priority         : constant Priority  := Engine_Monitor_Priority + 1;
+   Engine_Monitor_Priority : constant Priority := Main_Priority + 1;
+   Remote_Priority         : constant Priority := Engine_Monitor_Priority + 1;
    Engine_Control_Priority : constant Priority := Remote_Priority + 1;
    Steering_Priority       : constant Priority := Engine_Control_Priority + 1;
 
@@ -25,9 +25,9 @@ package System_Configuration is
    --  with the big picture in view. They are merely numbers rather than values
    --  of type Time_Span.
 
-   Engine_Control_Period   : constant := 350;     -- milliseconds
-   Engine_Monitor_Period   : constant := 1000;     -- milliseconds
+   Steering_Control_Period : constant := 300;     -- milliseconds
+   Engine_Control_Period   : constant := 250;     -- milliseconds
+   Engine_Monitor_Period   : constant := 200;     -- milliseconds
    Remote_Control_Period   : constant := 100;     -- milliseconds
-   Steering_Control_Period : constant := 10;      -- milliseconds
 
 end System_Configuration;

@@ -43,4 +43,3 @@ package body Collision_Detection is
    end Exclusion_Zone_Violated;
 
 end Collision_Detection;
-
