@@ -19,5 +19,4 @@ package Global_Initialization is
       Global_Epoch : Time := Time_First;
    end Critical_Instant;
 
-
 end Global_Initialization;
