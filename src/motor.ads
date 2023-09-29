@@ -4,6 +4,8 @@
 ---------------------------------------------------------------
 
 with Beta_Types;
+with Midero;            use Midero;
+
 with STM32;
 with STM32.Device;
 with STM32.GPIO;
@@ -11,8 +13,6 @@ with STM32.PWM;
 with STM32.Timers;
 
 package Motor is   
-
-   
    use STM32.Device;
    use STM32.GPIO;
    use STM32.Timers;
@@ -20,10 +20,7 @@ package Motor is
    
    package BT renames Beta_Types;
 
-   type Direction is (Forward, Backward);
-   type Power_Level is range 0 .. 100;
    type Basic_Motor is tagged limited private;
-   
    ---------------------
    -- Motor Utilities --
    ---------------------
