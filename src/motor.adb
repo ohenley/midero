@@ -2,19 +2,30 @@ pragma Ada_2012;
 
 package body Motor is
 
-   Power : Power_Level := 50;   
+   Power : Power_Level := 30;   
    Internal_Direction  : Direction := Forward;
-
+   
+   procedure Stop (This : out Basic_Motor);
    procedure Turn_Motor (This : out Basic_Motor; Intensity : Power_Level);
    procedure Change_Direction (This : out Basic_Motor; Dir : Direction);
    procedure Configure_Polarity_Control (This : GPIO_Point);
+   ----------
+   -- Stop --
+   ----------
+   procedure Stop (This : out Basic_Motor) is
+   begin
+      Clear (This.H_Bridge1);
+      Clear (This.H_Bridge2);
+      This.Power_Plant.Set_Duty_Cycle (100); -- Full power to Lock position 
+   end Stop;
+   
    ------------
    -- Engage --
    ------------
    procedure Engage (This : out Basic_Motor; State : Boolean) is
    begin
       if not State then
-         This.Turn_Motor (0);
+         This.Stop;
       else
          This.Turn_Motor (Power);
          This.Change_Direction (Dir => Internal_Direction);
