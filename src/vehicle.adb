@@ -9,6 +9,8 @@ package body Vehicle is
    Period : constant Time_Span := 
      Milliseconds (System_Configuration.Vehicle_Period);
    
+   Exclusion_Zone : constant Integer := 10;
+   Limited_Zone  : constant Integer := 70;
    ----------------
    -- Controller --
    ----------------
@@ -19,13 +21,13 @@ package body Vehicle is
       loop
          Next_Release := Next_Release + Period;
          delay until Next_Release;
-         
-         if Sonar.Measure_Distance <= 20 then
+               
+         if Sonar.Measure_Distance < Exclusion_Zone then
             Motor_Top_Left.Engage (False);
             Motor_Top_Right.Engage (False);
             Motor_Bottom_Left.Engage (False);
             Motor_Bottom_Right.Engage (False);
-         elsif Sonar.Measure_Distance > 20 or Sonar.Measure_Distance <= 81 then
+         elsif Sonar.Measure_Distance > Exclusion_Zone then
             Motor_Top_Left.Engage (True);
             Motor_Top_Right.Engage (True);
             Motor_Bottom_Left.Engage (True);
