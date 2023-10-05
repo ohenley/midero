@@ -4,6 +4,9 @@ package body Motor is
 
    Power : Power_Level := 30;   
    Internal_Direction  : Direction := Forward;
+
+   type State_T is (Run, Not_Run);
+   Internal_State : State_T := Not_Run;
    
    procedure Stop (This : out Basic_Motor);
    procedure Turn_Motor (This : out Basic_Motor; Intensity : Power_Level);
@@ -14,22 +17,32 @@ package body Motor is
    ----------
    procedure Stop (This : out Basic_Motor) is
    begin
-      Clear (This.H_Bridge1);
-      Clear (This.H_Bridge2);
+      Clear (This.H_Bridge1); -- 0
+      Clear (This.H_Bridge2); -- 0
       This.Power_Plant.Set_Duty_Cycle (100); -- Full power to Lock position 
    end Stop;
    
    ------------
    -- Engage --
    ------------
-   procedure Engage (This : out Basic_Motor; State : Boolean) is
+   procedure Engage (This : out Basic_Motor; State : State_T) is
    begin
-      if not State then
-         This.Stop;
-      else
-         This.Turn_Motor (Power);
-         This.Change_Direction (Dir => Internal_Direction);
-      end if;
+      if State /= Internal_State then
+         if Internal_State = Run then
+            This.Turn_Motor (Power);
+            This.Change_Direction (Dir => Internal_Direction);
+         else
+            This.Stop;
+         end if;
+         Internal_State := State
+      en dif;
+
+      --if not State then
+      --   This.Stop;
+      --else
+      --   This.Turn_Motor (Power);
+      --   This.Change_Direction (Dir => Internal_Direction);
+      --end if;
    end Engage;
    ----------------
    -- Turn_Motor --
