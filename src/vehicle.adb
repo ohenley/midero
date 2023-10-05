@@ -20,8 +20,6 @@ package body Vehicle is
       Global_Initialization.Critical_Instant.Wait (Epoch => Next_Release);
       loop
          Next_Release := Next_Release + Period;
-         delay until Next_Release;
-               
          if Sonar.Measure_Distance < Exclusion_Zone then
             Motor_Top_Left.Engage (False);
             Motor_Top_Right.Engage (False);
@@ -33,6 +31,8 @@ package body Vehicle is
             Motor_Bottom_Left.Engage (True);
             Motor_Bottom_Right.Engage (True);
          end if;
+
+         delay until Next_Release;
       end loop;
    end Controller;
    
