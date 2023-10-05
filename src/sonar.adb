@@ -24,7 +24,7 @@ package body Sonar is
       Distance : Integer;
    end Critical_Sonar;
    ------------------------------
-   -- Protected Critical_Sonar --
+   -- Protected Critical_SonarÂ --
    ------------------------------
    
    protected body Critical_Sonar is
@@ -56,9 +56,8 @@ package body Sonar is
       Successful   : Boolean;
    begin
       Global_Initialization.Critical_Instant.Wait (Epoch => Next_Release);
-      loop
-         Next_Release := Next_Release + Period;
-         delay until Next_Release;
+      loop                                          
+         Next_Release := Next_Release + Period; 
          
          Sensor.Do_Reading_On_ADC (Reading       => Reading,
                                    IO_Successful => Successful);
@@ -69,6 +68,8 @@ package body Sonar is
          else
             Critical_Sonar.Set_Distance (Reading => 0);
          end if;
+
+         delay until Next_Release;                
       end loop;
    end Controller;
    
